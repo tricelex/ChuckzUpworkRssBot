@@ -4,17 +4,17 @@ from dateutil import parser
 
 
 class DateHandler:
-
     @staticmethod
     def get_datetime_now():
         # Strip seconds from datetime
-        datestring = str(
-            datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%s"))
-        naive_date = datetime.datetime.utcnow().strptime(datestring, "%Y-%m-%d %H:%M:%s")
+        datestring = str(datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%s"))
+        naive_date = datetime.datetime.utcnow().strptime(
+            datestring, "%Y-%m-%d %H:%M:%s"
+        )
 
         # Make datetime aware of timezone
         aware_date = pytz.utc.localize(naive_date)
-        result = aware_date.astimezone(pytz.timezone('Europe/Berlin'))
+        result = aware_date.astimezone(pytz.timezone("Europe/Berlin"))
         return result
 
     @staticmethod
@@ -23,5 +23,5 @@ class DateHandler:
 
         if result.tzinfo is None:
             aware_date = pytz.utc.localize(result)
-            result = aware_date.astimezone(pytz.timezone('Europe/Berlin'))
+            result = aware_date.astimezone(pytz.timezone("Europe/Berlin"))
         return result
