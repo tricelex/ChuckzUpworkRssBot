@@ -7,6 +7,7 @@ from util.processing import BatchProcess
 from util.feedhandler import FeedHandler
 
 
+
 class UpworkRss(object):
     def __init__(self, telegram_token, update_interval):
         # Initialize bot internals
