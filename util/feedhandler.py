@@ -15,10 +15,10 @@ class FeedHandler(object):
             return feed.entries[:4]
 
     @staticmethod
-    def is_parseable(url):
+    def is_parsable(url):
         """Checks whether the given url provides a news feed"""
 
-        url_pattern = re.compile("((http(s?))):\/\/.*")
+        url_pattern = re.compile("^(http|https)://.*")
         if not url_pattern.match(url):
             return False
 
@@ -30,7 +30,7 @@ class FeedHandler(object):
 
         # Check if entries provided updated attributes
         for post in feed.entries:
-            if not hasattr(post, "upsated"):
+            if not hasattr(post, "published"):
                 return False
         return True
 
@@ -43,7 +43,7 @@ class FeedHandler(object):
         :return:
         """
 
-        string = string.lower()
+        # string = string.lower()
 
         url_pattern = re.compile("^(http|https)://.*")
         if not url_pattern.match(string):

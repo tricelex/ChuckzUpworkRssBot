@@ -50,7 +50,6 @@ class BatchProcess(threading.Thread):
 
     def update_feed(self, url):
         telegram_users = self.db.get_users_for_url(url=url[0])
-
         for user in telegram_users:
             if user[6]:  # is_active
                 try:
@@ -69,7 +68,7 @@ class BatchProcess(threading.Thread):
                     )
         self.db.update_url(url=url[0], last_updated=str(DateHandler.get_datetime_now()))
 
-    def send_newest_message(self, url, post, user):
+    def send_newest_messages(self, url, post, user):
         post_update_date = DateHandler.parse_datetime(datetime=post.updated)
         url_update_date = DateHandler.parse_datetime(datetime=url[1])
 

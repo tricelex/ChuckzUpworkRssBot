@@ -10,12 +10,17 @@ class DatabaseHandler(object):
 
         if not self.filehandler.file_exists(self.database_path):
             sql_command = self.filehandler.load_file("resources/setup.sql")
+            try:
+                conn = sqlite3.connect(self.database_path)
+                cursor = conn.cursor()
+                print("Database created and Successfully Connected to SQLite")
 
-            conn = sqlite3.connect(self.database_path)
-            cursor = conn.cursor()
-            cursor.executescript(sql_command)
-            conn.commit()
-            conn.close()
+                cursor.executescript(sql_command)
+                conn.commit()
+                conn.close()
+
+            except sqlite3.Error as error:
+                print("Error while connecting to sqlite", error)
 
     def add_user(
         self,
@@ -79,7 +84,7 @@ class DatabaseHandler(object):
 
         sql_command = "UPDATE user SET "
         for key in kwargs:
-            sql_command = sql_command + str(key) + "='" + str(kwargs[key]) + "',"
+            sql_command = sql_command + str(key) + "=" + str(kwargs[key]) + "',"
         sql_command = sql_command[:-2] + " WHERE telegram_id=" + str(telegram_id)
 
         cursor.execute(sql_command)
@@ -131,13 +136,14 @@ class DatabaseHandler(object):
 
         sql_command = "UPDATE web SET "
         for key in kwargs:
-            sql_command = sql_command + str(key) + "='" + str(kwargs[key]) + "',"
+            sql_command = sql_command + str(key) + "='" + str(kwargs[key]) + "', "
         if len(kwargs) == 0:
             sql_command = sql_command + " WHERE url='" + str(url) + "';"
         else:
             sql_command = sql_command[:-2] + " WHERE url='" + str(url) + "';"
-        cursor.execute(sql_command)
+        print(sql_command)
 
+        cursor.execute(sql_command)
         conn.commit()
         conn.close()
 
@@ -187,7 +193,7 @@ class DatabaseHandler(object):
 
         cursor.execute(
             "DELETE FROM web_user WHERE telegram_id=(?) AND url = (?)",
-            (url, telegram_id),
+            (telegram_id, url),
         )
         cursor.execute(
             "DELETE FROM web WHERE web.url NOT IN (SELECT web_user.url from web_user)"
@@ -241,7 +247,7 @@ class DatabaseHandler(object):
 
         return result
 
-    def get_users_for_urls(self, url):
+    def get_users_for_url(self, url):
         conn = sqlite3.connect(self.database_path)
         cursor = conn.cursor()
 

@@ -18,7 +18,7 @@ class FileHandler(object):
         """Loads a json file and returns the content as a dictionary"""
         filepath = os.path.join(self.base_path, path)
 
-        with open(filepath, "") as jsonfile:
+        with open(filepath, "r") as jsonfile:
             data = json.load(jsonfile)
         return data
 
@@ -41,7 +41,7 @@ class FileHandler(object):
         """Stores string data to a file at a given path"""
         filepath = os.path.join(self.base_path, path)
 
-        with open(filepath, "w=") as file:
+        with open(filepath, "w+") as file:
             data = file.write(str(data))
         return data
 
