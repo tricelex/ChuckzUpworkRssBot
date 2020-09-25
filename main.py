@@ -1,4 +1,6 @@
 import feedparser
+from html.parser import  HTMLParser
+from bs4 import BeautifulSoup
 import os
 
 
@@ -8,23 +10,28 @@ import os
 # Press Double Shift to search everywhere for classes, files,
 # tool windows, actions, and settings.
 def feed():
-    # url = "https://feedforall.com/sample.xml"
-    # nnn_rss = 'https://www.upwork.com/ab/feed/topics/rss?securityToken' \
-    #       '=10ea21d4249c994df0dfaa7321b14d04e370c0c8e8590ed6b14d4538a4a41012373a90200ba211ea434f85a1a62c41710a3cdc9f5220efe7f104bbe3ce55a6fe&userUid=1162176695087697920&orgUid=1162176695087697922&topic=4870392 '
-    #
-    # nnn_atom ='https://www.upwork.com/ab/feed/topics/atom?securityToken' \
-    #           '=10ea21d4249c994df0dfaa7321b14d04e370c0c8e8590ed6b14d4538a4a41012373a90200ba211ea434f85a1a62c41710a3cdc9f5220efe7f104bbe3ce55a6fe&userUid=1162176695087697920&orgUid=1162176695087697922&topic=4870392 '
-    #
-    # parsed = feedparser.parse(nnn_atom)
+    url = "https://feedforall.com/sample.xml"
+    nnn_rss = 'https://www.upwork.com/ab/feed/topics/rss?securityToken' \
+              '=10ea21d4249c994df0dfaa7321b14d04e370c0c8e8590ed6b14d4538a4a41012373a90200ba211ea434f85a1a62c41710a3cdc9f5220efe7f104bbe3ce55a6fe&userUid=1162176695087697920&orgUid=1162176695087697922&topic=4870392 '
+
+    nnn_atom = 'https://www.upwork.com/ab/feed/topics/atom?securityToken=10ea21d4249c994df0dfaa7321b14d04e370c0c8e8590ed6b14d4538a4a41012373a90200ba211ea434f85a1a62c41710a3cdc9f5220efe7f104bbe3ce55a6fe&userUid=1162176695087697920&orgUid=1162176695087697922&topic=4870392 '
+
+    parsed = feedparser.parse(nnn_atom)
     # print(parsed.keys())
-    # print(parsed.entries[0].content)
+    # print(parsed.entries[0].keys())
+    # print(parsed.entries[0].id)
+    # print(parsed.entries[0].guid)
+    # print(parsed.entries[0].link)
+    # print(parsed.entries[0].title)
+    # print(parsed.entries[0].updated)
+    htm_files = parsed.entries[0].summary
+    soup = BeautifulSoup(htm_files, features="html.parser")
+    print(soup.get_text())
 
     # for item in parsed.entries:
     #     print("title " + item.title)
     #     # print("description " + item.description)
     #     # print("guid " + item.guid)
-
-    print(os.environ)
 
 
 def print_hi(name):

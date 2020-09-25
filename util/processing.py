@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 from telegram.error import TelegramError, Unauthorized
 from telegram import ParseMode
 from multiprocessing.dummy import Pool as ThreadPool
@@ -58,10 +59,10 @@ class BatchProcess(threading.Thread):
                 except:
                     traceback.print_exc()
                     message = (
-                        "Something went wrong when I tried to parse the URL: \n\n "
-                        + url[0]
-                        + "\n\nCould you please check that for me? Remove the url from your subscriptions "
-                        "using the /remove command, it seems like it does not work anymore"
+                            "Something went wrong when I tried to parse the URL: \n\n "
+                            + url[0]
+                            + "\n\nCould you please check that for me? Remove the url from your subscriptions "
+                              "using the /remove command, it seems like it does not work anymore"
                     )
                     self.bot.send_message(
                         chat_id=user[0], text=message, parse_mode=ParseMode.HTML
@@ -73,9 +74,14 @@ class BatchProcess(threading.Thread):
         url_update_date = DateHandler.parse_datetime(datetime=url[1])
 
         if post_update_date > url_update_date:
+
+            soup = BeautifulSoup(post.summary, features="html.parser")
+            desc = soup.get_text()
             message = (
-                "[" + user[7] + "] <a href='" + post.link + "'>" + post.title + "</a>"
+                    "[" + url[7] + "] <a href='" + post.link + "'>" + post.title + "</a>\n\n"
+                    + desc
             )
+
             try:
                 self.bot.send_message(
                     chat_id=user[0], text=message, parse_mode=ParseMode.HTML

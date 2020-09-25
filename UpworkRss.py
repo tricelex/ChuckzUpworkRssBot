@@ -5,7 +5,7 @@ from util.filehandler import FileHandler
 from util.database import DatabaseHandler
 from util.processing import BatchProcess
 from util.feedhandler import FeedHandler
-
+from bs4 import BeautifulSoup
 
 
 class UpworkRss(object):
@@ -101,20 +101,20 @@ class UpworkRss(object):
 
         if any(arg_url in entry for entry in entries):
             message = (
-                "Sorry, "
-                + telegram_user.first_name
-                + "! I already have that url with stored in your subscriptions."
+                    "Sorry, "
+                    + telegram_user.first_name
+                    + "! I already have that url with stored in your subscriptions."
             )
             update.message.reply_text(message)
             return
 
         if any(arg_entry in entry for entry in entries):
             message = (
-                "Sorry! I already have an entry with name "
-                + arg_entry
-                + " stored in your subscriptions.. Please choose another entry name or delete the entry using '/remove "
-                + arg_entry
-                + "'"
+                    "Sorry! I already have an entry with name "
+                    + arg_entry
+                    + " stored in your subscriptions.. Please choose another entry name or delete the entry using '/remove "
+                    + arg_entry
+                    + "'"
             )
             update.message.reply_text(message)
             return
@@ -150,21 +150,23 @@ class UpworkRss(object):
             args_count = 4
 
         url = self.db.get_user_bookmark(telegram_id=telegram_user.id, alias=args_entry)
-        print(context.args)
         if url is None:
             message = (
-                "I can not find an entry with label "
-                + args_entry
-                + "in your subscriptions! Please check your subscriptions using /list and use the delete command "
-                "again! "
+                    "I can not find an entry with label "
+                    + args_entry
+                    + "in your subscriptions! Please check your subscriptions using /list and use the delete command "
+                      "again! "
             )
             update.message.reply_text(message)
             return
 
         entries = FeedHandler.parse_feed(url[0], args_count)
         for entry in entries:
+            soup = BeautifulSoup(entry.summary, features="html.parser")
+            desc = soup.get_text()
             message = (
-                "[" + url[1] + "] <a href='" + entry.link + "'>" + entry.title + "</a>"
+                    "[" + url[1] + "] <a href='" + entry.link + "'>" + entry.title + "</a>\n\n"
+                    + desc
             )
             print(message)
 
@@ -197,10 +199,10 @@ class UpworkRss(object):
             update.message.reply_text(message)
         else:
             message = (
-                "I can not find an entry with label "
-                + context.args[0]
-                + "in your subscriptions! Please check your subscriptions using /list and use the delete command "
-                "again! "
+                    "I can not find an entry with label "
+                    + context.args[0]
+                    + "in your subscriptions! Please check your subscriptions using /list and use the delete command "
+                      "again! "
             )
             update.message.reply_text(message)
 
